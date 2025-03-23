@@ -9,7 +9,7 @@ export interface Theme {
     alert: string
     alertColor: string
     alertHover: string
-    disablabled: string
+    disabled: string
     disabledColor: string
     primary: string
     primaryColor: string
