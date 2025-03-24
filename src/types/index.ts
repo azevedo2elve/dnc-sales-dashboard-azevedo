@@ -1,4 +1,5 @@
 export * from './avatarsList'
+export * from './curstomChart'
 export * from './customTable'
 export * from './theme'
 export * from './typographies'
