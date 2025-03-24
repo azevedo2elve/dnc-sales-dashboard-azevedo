@@ -1,7 +1,7 @@
 export interface Theme {
   appBackground: string
   appColor: string
-  appDefaultStoke: string
+  appDefaultStroke: string
   appLogo: string
   appSkeletonFrom: string
   appSketelonTo: string
