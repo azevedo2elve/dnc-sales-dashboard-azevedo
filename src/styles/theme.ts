@@ -3,7 +3,7 @@ import { Theme } from '@/types'
 export const lightTheme: Theme = {
   appBackground: '#FFF',
   appColor: '#000',
-  appDefaultStoke: '#E0E0E0',
+  appDefaultStroke: '#E0E0E0',
   appLogo: 'dnc-logo-black.svg',
   appSkeletonFrom: '#EEE',
   appSketelonTo: '#CCC',
@@ -43,7 +43,7 @@ export const lightTheme: Theme = {
 export const darkTheme: Theme = {
   appBackground: '#060B26',
   appColor: '#FFF',
-  appDefaultStoke: '#21497D',
+  appDefaultStroke: '#21497D',
   appLogo: 'dnc-logo-white.svg',
   appSkeletonFrom: '#060B26',
   appSketelonTo: '#21497D',
