@@ -18,7 +18,7 @@ import { useGet } from '@/hooks'
 import { currencyConverter, highlightTextConverter } from '@/utils'
 
 // TYPES
-import { HighlightsData, StarsData, NewsData } from '@/types'
+import { HighlightsData, StarsData, NewsData, CustomChartProps } from '@/types'
 
 function Home() {
   const {
@@ -27,49 +27,34 @@ function Home() {
     error: highlightsError,
   } = useGet<HighlightsData[]>('sales/highlights')
 
-  const mockListData = [
-    {
-      avatar: '/dnc-avatar.svg',
-      name: 'Nome Sobrenome 1',
-      subtitle: currencyConverter(1500.5),
-    },
-    {
-      avatar: '/dnc-avatar.svg',
-      name: 'Nome Sobrenome 2',
-      subtitle: currencyConverter(2050.2),
-    },
-    {
-      avatar: '/dnc-avatar.svg',
-      name: 'Nome Sobrenome 3',
-      subtitle: currencyConverter(3123.45),
-    },
-  ]
+  const {
+    data: salesMonthData,
+    loading: salesMonthLoading,
+    error: salesMonthError,
+  } = useGet<CustomChartProps>('sales/month')
 
-  const mockTableData = {
-    headers: ['Name', 'Email', 'Actions'],
-    rows: [
-      [
-        <span>Nome 1</span>,
-        <span>email@email.com</span>,
-        <button>ACTION</button>,
-      ],
-      [
-        <span>Nome 2</span>,
-        <span>email@email.com</span>,
-        <button>ACTION</button>,
-      ],
-      [
-        <span>Nome 3</span>,
-        <span>email@email.com</span>,
-        <button>ACTION</button>,
-      ],
-    ],
-  }
+  const {
+    data: salesStarsData,
+    loading: salesStarsLoading,
+    error: salesStarsError,
+  } = useGet<StarsData[]>('sales/stars')
+
+  const {
+    data: newsData,
+    loading: newsLoading,
+    error: newsError,
+  } = useGet<NewsData[]>('news')
+
+  const {
+    data: salesYearData,
+    loading: salesYearLoading,
+    error: salesYearError,
+  } = useGet<CustomChartProps>('sales/year')
 
   return (
     <>
       <Header />
-      <Container maxWidth="lg">
+      <Container className="mb-2" maxWidth="lg">
         <Grid2 container spacing={4}>
           {!highlightsError && (
             <>
@@ -145,39 +130,108 @@ function Home() {
           )}
 
           <Grid2 size={{ xs: 12, md: 7 }}>
-            <CardComponent>
-              <StyledH2 className="mb-1">Valor de vendas no mês</StyledH2>
-              <CustomChart
-                labels={['Jan', 'Fev', 'Mar', 'Abr', 'Mai']}
-                data={[1000.12, 2456.54, 986.32, 654.89, 1234.56, 1500.5]}
-                type="line"
-              />
-            </CardComponent>
+            {!salesMonthError && (
+              <CardComponent
+                className={
+                  salesMonthLoading
+                    ? 'skeleton-loading skeleton-loading-mh-2'
+                    : ''
+                }
+              >
+                {!salesMonthLoading && salesMonthData && (
+                  <>
+                    <StyledH2 className="mb-1">Valor de vendas no mês</StyledH2>
+                    <CustomChart
+                      labels={salesMonthData.labels.map((label) => label)}
+                      data={salesMonthData.data.map((data) => data)}
+                      type={salesMonthData.type}
+                    />
+                  </>
+                )}
+              </CardComponent>
+            )}
           </Grid2>
           <Grid2 size={{ xs: 12, md: 5 }}>
-            <CardComponent>
-              <StyledH2 className="mb-1">Maiores vendedores do mês</StyledH2>
-              <AvatarList listData={mockListData} />
-            </CardComponent>
+            {!salesStarsError && (
+              <CardComponent
+                className={
+                  salesStarsLoading
+                    ? 'skeleton-loading skeleton-loading-mh-2'
+                    : ''
+                }
+              >
+                {!salesStarsLoading && salesStarsData && (
+                  <>
+                    <StyledH2 className="mb-1">
+                      Maiores vendedores do mês
+                    </StyledH2>
+                    <AvatarList
+                      listData={salesStarsData.map((stars) => ({
+                        avatar: '/dnc-avatar.svg',
+                        name: stars.name,
+                        subtitle: currencyConverter(stars.value),
+                      }))}
+                    />
+                  </>
+                )}
+              </CardComponent>
+            )}
           </Grid2>
           <Grid2 size={{ xs: 12, md: 5 }}>
-            <CardComponent>
-              <StyledH2 className="mb-1">Notícias relevantes</StyledH2>
-              <CustomTable
-                headers={mockTableData.headers}
-                rows={mockTableData.rows}
-              />
-            </CardComponent>
+            {!newsError && (
+              <CardComponent
+                className={
+                  salesStarsLoading
+                    ? 'skeleton-loading skeleton-loading-mh-2'
+                    : ''
+                }
+              >
+                {!newsLoading && newsData && (
+                  <>
+                    <StyledH2 className="mb-1">Notícias relevantes</StyledH2>
+                    <CustomTable
+                      headers={['Título', 'Horário']}
+                      rows={newsData.map((news) => [
+                        <a
+                          className="ellipsis ellipsis-sm"
+                          href={news.link}
+                          target="_blank"
+                        >
+                          {news.title}
+                        </a>,
+                        <a href={news.link} target="_blank">
+                          {news.date}
+                        </a>,
+                      ])}
+                    />
+                  </>
+                )}
+              </CardComponent>
+            )}
           </Grid2>
           <Grid2 size={{ xs: 12, md: 7 }}>
-            <CardComponent>
-              <StyledH2 className="mb-1">Maiores vendedores por mês</StyledH2>
-              <CustomChart
-                labels={['Jan', 'Fev', 'Mar', 'Abr', 'Mai']}
-                data={[1000.12, 2456.54, 986.32, 654.89, 1234.56, 1500.5]}
-                type="bar"
-              />
-            </CardComponent>
+            {!salesYearError && (
+              <CardComponent
+                className={
+                  salesYearLoading
+                    ? 'skeleton-loading skeleton-loading-mh-2'
+                    : ''
+                }
+              >
+                {!salesYearLoading && salesYearData && (
+                  <>
+                    <StyledH2 className="mb-1">
+                      Valor de vendas por mês
+                    </StyledH2>
+                    <CustomChart
+                      labels={salesYearData.labels.map((label) => label)}
+                      data={salesYearData.data.map((data) => data)}
+                      type={salesYearData.type}
+                    />
+                  </>
+                )}
+              </CardComponent>
+            )}
           </Grid2>
         </Grid2>
       </Container>
